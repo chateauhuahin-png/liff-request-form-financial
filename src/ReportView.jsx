@@ -99,9 +99,20 @@ export default function ReportView({ initialPeriod }) {
       </div>
 
       {report && !loading && (
-        <button className="submit-btn no-print" style={{ marginTop: '14px' }} onClick={handlePrint}>
-          🖨️ พิมพ์ / บันทึกเป็น PDF
-        </button>
+        <div className="no-print" style={{ display: 'flex', gap: '10px', marginTop: '14px' }}>
+          <a
+            className="submit-btn"
+            style={{ flex: 1, textAlign: 'center', textDecoration: 'none', display: 'inline-block' }}
+            href={`${import.meta.env.VITE_API_BASE_URL}/reports/pdf?period=${period}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            📄 ดาวน์โหลด PDF
+          </a>
+          <button className="btn-ghost" style={{ flex: 1 }} onClick={handlePrint}>
+            🖨️ พิมพ์
+          </button>
+        </div>
       )}
 
       <div className="receipt-card report-card">
