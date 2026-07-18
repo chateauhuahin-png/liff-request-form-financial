@@ -19,11 +19,6 @@ export async function initLiff() {
 
   try {
     await liff.init({ liffId });
-
-    // ถ้าเปิดนอกแอป LINE (เช่นเปิดในเบราว์เซอร์ธรรมดา) และยังไม่ login ให้ login ก่อน
-    if (!liff.isLoggedIn() && !liff.isInClient()) {
-      liff.login();
-    }
     liffReady = true;
     return true;
   } catch (err) {
