@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { liff, isLiffReady } from './liff.js';
 
 const PERIOD_TABS = [
   { key: 'daily', label: 'วันนี้' },
@@ -64,6 +65,20 @@ export default function ReportView({ initialPeriod }) {
     ? Math.max(...report.byCategory.map((c) => c.amount))
     : 0;
 
+  function handlePrint() {
+    // ใน LINE ในแอป (LIFF webview) เปิดคำสั่งพิมพ์ตรงๆ มักไม่ทำงาน — เปิดหน้านี้ในเบราว์เซอร์จริงแทนแล้วค่อยพิมพ์
+    if (isLiffReady() && liff.isInClient()) {
+      liff.openWindow({ url: window.location.href, external: true });
+      return;
+    }
+    window.print();
+  }
+
+  const printedAt = new Date().toLocaleString('th-TH', {
+    dateStyle: 'long',
+    timeStyle: 'short',
+  });
+
   return (
     <div className="report-wrap">
       <div className="eyebrow">
@@ -71,7 +86,7 @@ export default function ReportView({ initialPeriod }) {
         <span>ธุรการ</span>
       </div>
 
-      <div className="report-tabs">
+      <div className="report-tabs no-print">
         {PERIOD_TABS.map((t) => (
           <button
             key={t.key}
@@ -83,12 +98,23 @@ export default function ReportView({ initialPeriod }) {
         ))}
       </div>
 
+      {report && !loading && (
+        <button className="submit-btn no-print" style={{ marginTop: '14px' }} onClick={handlePrint}>
+          🖨️ พิมพ์ / บันทึกเป็น PDF
+        </button>
+      )}
+
       <div className="receipt-card report-card">
         {loading && <div className="sub">กำลังโหลดรายงาน...</div>}
         {error && <div className="error">{error}</div>}
 
         {report && !loading && (
           <>
+            <div className="print-only print-header">
+              <div className="print-header-title">รายงานสรุปค่าใช้จ่าย (ธุรการ)</div>
+              <div className="print-header-sub">พิมพ์เมื่อ {printedAt}</div>
+            </div>
+
             <h1>{report.label}</h1>
             <div className="sub">สรุปคำขอเบิกเงินทั้งหมดในช่วงนี้</div>
 
@@ -172,6 +198,19 @@ export default function ReportView({ initialPeriod }) {
             )}
 
             {report.count === 0 && <div className="status-note show">ไม่มีคำขอในช่วงเวลานี้</div>}
+
+            <div className="print-only print-signatures">
+              <div className="print-sig-box">
+                <div className="print-sig-line">ลงชื่อ ....................................................</div>
+                <div className="print-sig-label">ผู้จัดทำรายงาน</div>
+                <div className="print-sig-label">วันที่ ..............................</div>
+              </div>
+              <div className="print-sig-box">
+                <div className="print-sig-line">ลงชื่อ ....................................................</div>
+                <div className="print-sig-label">ผบ.หน่วย (ผู้ตรวจสอบ/รับทราบ)</div>
+                <div className="print-sig-label">วันที่ ..............................</div>
+              </div>
+            </div>
           </>
         )}
       </div>

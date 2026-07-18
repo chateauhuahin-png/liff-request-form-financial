@@ -301,3 +301,44 @@ textarea { resize: vertical; min-height: 52px; font-family: inherit; }
 .request-row-right { text-align: right; flex-shrink: 0; }
 .request-row-amount { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
 .request-row-status { font-size: 11px; font-weight: 600; margin-top: 2px; }
+
+/* --- โหมดพิมพ์ / บันทึกเป็น PDF --- */
+.print-only { display: none; }
+
+.print-header { margin-bottom: 18px; }
+.print-header-title {
+  font-family: 'Noto Serif Thai', serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+.print-header-sub {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.print-signatures {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+.print-sig-box { flex: 1; }
+.print-sig-line { font-size: 14px; margin-bottom: 8px; }
+.print-sig-label { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+
+@media print {
+  body { background: white !important; }
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  .report-wrap { max-width: 100%; padding: 0; margin: 0; }
+  .receipt-card {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+  .receipt-card::before { display: none; }
+  .stat-card { border: 1px solid #ccc; background: white !important; }
+  .bar-fill { background: #999 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .status-pill { background: white !important; }
+}
