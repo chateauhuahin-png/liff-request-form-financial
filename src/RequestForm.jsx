@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { liff, isLiffReady } from './liff.js';
 
 const CATEGORIES = [
-  'ค่าใช้จ่ายในการเดินทาง',
+  'ค่าเบี้ยเลี้ยง',
+    'ค่าอาหาร',
+    'ค่าอาหารกองรักษาการณ์',
+    'ค่าเบี้ยเลี้ยง,ค่าที่พัก',
   'ค่าจัดซื้อวัสดุ/ครุภัณฑ์',
-  'ค่าซ่อมบำรุง',
-  'ค่ารับรอง/จัดเลี้ยง',
-  'ค่าใช้จ่ายในการฝึก/กิจกรรม',
+    'ค่าวัตถุดิบประกอบอาหาร',
+  'ค่าซ่อม',
+  'ค่ารับคณะ',
   'อื่นๆ',
 ];
 
@@ -204,14 +207,14 @@ export default function RequestForm() {
               style={{ marginTop: '10px' }}
               value={requesterName}
               onChange={(e) => setRequesterName(e.target.value)}
-              placeholder="พิมพ์ชื่อ-ยศ เอง เช่น ร.ต.สมชาย ใจดี"
+              placeholder="พิมพ์ชื่อ-ยศ เอง เช่น ร.ต.หญิง กัญญาภัทร แสงจันทร์ ร.น."
             />
           )}
         </div>
 
         <div className="field">
           <label>หน่วยงาน/หน่วยที่สังกัด</label>
-          <input type="text" value={unit} onChange={(e) => setUnit(e.target.value)} placeholder="เช่น กองร้อยที่ 1" />
+          <input type="text" value={unit} onChange={(e) => setUnit(e.target.value)} placeholder="เช่น ฝกง.นพค.43" />
         </div>
 
         <div className="field">
@@ -265,7 +268,7 @@ export default function RequestForm() {
 
         <div className="field">
           <label>หมายเหตุเพิ่มเติม (ถ้ามี)</label>
-          <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="ข้อมูลเพิ่มเติมสำหรับผู้อนุมัติ" />
+          <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="ข้อมูลเพิ่มเติมสำหรับ ผบ.หน่วย" />
         </div>
 
         {error && <div className="error">{error}</div>}
