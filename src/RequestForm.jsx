@@ -22,6 +22,8 @@ function tempRequestNo() {
 }
 
 export default function RequestForm() {
+  const [personnel, setPersonnel] = useState([]);
+  const [selectedPerson, setSelectedPerson] = useState('');
   const [requesterName, setRequesterName] = useState('');
   const [unit, setUnit] = useState('');
   const [purpose, setPurpose] = useState('');
@@ -39,13 +41,28 @@ export default function RequestForm() {
 
   useEffect(() => {
     if (isLiffReady() && liff.isLoggedIn()) {
-      liff.getProfile().then((p) => {
-        setProfile(p);
-        // ชื่อจาก LINE เป็นแค่ค่าเริ่มต้น ผู้ขอเบิกแก้เป็นชื่อ-ยศทางการได้
-        setRequesterName((prev) => prev || p.displayName || '');
-      }).catch(() => {});
+      liff.getProfile().then(setProfile).catch(() => {});
     }
   }, []);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/personnel`)
+      .then((res) => res.json())
+      .then((data) => setPersonnel(Array.isArray(data) ? data : []))
+      .catch(() => setPersonnel([]));
+  }, []);
+
+  function handlePersonChange(value) {
+    setSelectedPerson(value);
+    if (value === '__other__') {
+      setRequesterName('');
+      // ไม่แตะช่องหน่วยงาน ปล่อยให้กรอกเองได้เลย
+      return;
+    }
+    const person = personnel.find((p) => p.name === value);
+    setRequesterName(value);
+    if (person) setUnit(person.unit);
+  }
 
   function handleFile(e) {
     const f = e.target.files[0];
@@ -174,7 +191,22 @@ export default function RequestForm() {
 
         <div className="field">
           <label>ชื่อ-ยศ ผู้ขอเบิก</label>
-          <input type="text" value={requesterName} onChange={(e) => setRequesterName(e.target.value)} placeholder="เช่น ร.ต.สมชาย ใจดี" />
+          <select value={selectedPerson} onChange={(e) => handlePersonChange(e.target.value)}>
+            <option value="">เลือกชื่อ-ยศ</option>
+            {personnel.map((p) => (
+              <option key={p.name} value={p.name}>{p.name}</option>
+            ))}
+            <option value="__other__">อื่นๆ (พิมพ์ชื่อเอง)</option>
+          </select>
+          {selectedPerson === '__other__' && (
+            <input
+              type="text"
+              style={{ marginTop: '10px' }}
+              value={requesterName}
+              onChange={(e) => setRequesterName(e.target.value)}
+              placeholder="พิมพ์ชื่อ-ยศ เอง เช่น ร.ต.สมชาย ใจดี"
+            />
+          )}
         </div>
 
         <div className="field">

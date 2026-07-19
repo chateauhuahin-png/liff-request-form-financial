@@ -77,7 +77,11 @@ npm run build
 จากนั้น backend มีหน้าที่ต่อ: บันทึกสถานะ `pending_approval` และส่ง Flex Message แจ้ง ผบ.หน่วย ให้กดอนุมัติ/ไม่อนุมัติ
 (เป็นขั้นตอนที่ ② ซึ่งจะสร้างแยกในโปรเจกต์ backend)
 
-## 6. Endpoint ที่ฟอร์มจ่ายเงิน (โหมด `?requestId=`) ใช้
+## 6. Endpoint เพิ่มเติมที่ฟอร์มขอเบิกเงินใช้
+
+- `GET {VITE_API_BASE_URL}/personnel` — รายชื่อกำลังพลสำหรับ dropdown "ชื่อ-ยศ ผู้ขอเบิก" เลือกชื่อแล้วช่อง "หน่วยงาน" จะเติมให้อัตโนมัติ (แก้ไขรายชื่อได้ที่ backend ไฟล์ `src/data/personnel.js`)
+
+## 7. Endpoint ที่ฟอร์มจ่ายเงิน (โหมด `?requestId=`) ใช้
 
 - `GET {VITE_API_BASE_URL}/requests/{id}` — ดึงรายละเอียดคำขอมาแสดงก่อนจ่าย
 - `POST {VITE_API_BASE_URL}/requests/{id}/pay` — ส่งแบบ `multipart/form-data`:
@@ -88,7 +92,7 @@ npm run build
 | `proof` | file | หลักฐานการจ่าย (optional) |
 | `financeUserId` | string | userId ของ น.การเงิน จาก LIFF profile |
 
-## 7. Endpoint ที่ฟอร์มส่งหลักฐานปิดเรื่อง (โหมด `?settleId=`) ใช้
+## 8. Endpoint ที่ฟอร์มส่งหลักฐานปิดเรื่อง (โหมด `?settleId=`) ใช้
 
 - `GET {VITE_API_BASE_URL}/requests/{id}` — ดึงรายละเอียดคำขอมาแสดง
 - `POST {VITE_API_BASE_URL}/requests/{id}/settle` — ส่งแบบ `multipart/form-data`:
@@ -99,7 +103,7 @@ npm run build
 | `note` | string | หมายเหตุ (optional) |
 | `receipt` | file | รูปใบเสร็จ (optional) |
 
-## 8. Endpoint ที่หน้ารายงาน (โหมด `?report=`) ใช้
+## 9. Endpoint ที่หน้ารายงาน (โหมด `?report=`) ใช้
 
 - `GET {VITE_API_BASE_URL}/reports?period=daily|weekly|monthly|yearly` — คืนสรุปยอดเบิกรวม ยอดใช้จริง แยกตามสถานะ/หมวดหมู่ และรายการทั้งหมดในช่วงนั้น
 - `GET {VITE_API_BASE_URL}/reports/pdf?period=...` — ดาวน์โหลดรายงานเป็นไฟล์ PDF โดยตรง (ปุ่ม "📄 ดาวน์โหลด PDF" ในหน้านี้เรียก endpoint นี้)
